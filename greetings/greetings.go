@@ -18,5 +18,6 @@ func add(x,y int) int {
 }
 func main(){
 	a := "hello"
+	a = "print"
 	fmt.Println(a)
 }
