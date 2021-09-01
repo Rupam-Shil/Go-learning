@@ -65,3 +65,25 @@ func main() {
 	fmt.Println(sum(9,4))
 }
 ```
+
+# 4.go
+
+Go has only one looping construct, the for loop. Unlike other languages like C, Java, or JavaScript there are no parentheses surrounding the three components of the for statement and the braces { } are always required.
+
+```
+package main
+
+import "fmt"
+
+func main(){
+	oneName := "rupam"
+	var anotherName string
+	anotherName = "Subhadeep"
+
+	for i:=0;i<10;i++{
+
+		fmt.Printf("%v and %v \n",oneName,anotherName)
+	}
+
+}
+```
