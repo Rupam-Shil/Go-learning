@@ -17,6 +17,8 @@ func main() {
 
 	// aFunctinon = first     -> possible as aFunction and first are of same type
 	// aFunctinon = returnParam   -> not possible as aFunction and returnParam are not of same type
+
+	
 	crazyFunction := func(f func()) func(){
 		return  f
 	}
