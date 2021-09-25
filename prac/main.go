@@ -17,6 +17,10 @@ func main() {
 	// }else{
 	// 	fmt.Println("Welcome Ms.", name)
 	// }
+	arr := []string{"name","gender","biola"}
+	for _, name := range arr {
+		fmt.Println(name)
+	}
 
 }
 
