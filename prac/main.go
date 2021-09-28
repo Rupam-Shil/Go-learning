@@ -1,35 +1,47 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
+
+type node struct {
+	value int
+	next *node
+}
+
+type linkedList struct{
+	head *node
+	length int
+}
+
+func (l *linkedList) add(value int){
+	newNode := new(node)
+	newNode.value = value
+
+	if l.head == nil {
+		l.head = newNode
+	} else {
+		iterator:= l.head
+		for ; iterator.next != nil; iterator = iterator.next{
+		}
+		iterator.next = newNode
+	}
+}
+
+func (l linkedList) String() string {
+	sb := strings.Builder{}
+	for iterator := l.head; iterator != nil; iterator= iterator.next{
+		sb.WriteString(fmt.Sprintf("%d ",iterator.value))
+	}
+	return sb.String()
+}
 
 func main() {
-	rupam := student{"Rupam", "ENG19CS0265", 5}
-	fmt.Println(rupam)
-	rupam.printUsn()
-	// fmt.Println("Please enter your name")
-	// reader  := bufio.NewReader(os.Stdin)
-	// name, _ := reader.ReadString('\n')
-	// fmt.Println("Please enter your Gender(m/f)")
-	// gender, _ := reader.ReadString('\n')
-	// gender = strings.TrimSpace(gender)
-	// if gender == "m" {
-	// 	fmt.Println("Welcome Mr.", name)
-	// }else{
-	// 	fmt.Println("Welcome Ms.", name)
-	// }
-	arr := []string{"name","gender","biola"}
-	for _, name := range arr {
-		fmt.Println(name)
-	}
-
-}
-
-type student struct {
-	name string
-	usn  string
-	year int
-}
-
-func (s student) printUsn() {
-	fmt.Println("The usn is",s.name)
+	
+	fmt.Println("Welcome to linkedlist")
+	l := linkedList{}
+	l.add(5)
+	l.add(90)
+	fmt.Println(l)
 }
