@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
 func main() {
 	fmt.Println("Welcome to get request")
-	PerfromPostRequest()
+	PerfromPostFormRequest()
 }
 
 func  PerformGetRequest(){
@@ -50,6 +51,26 @@ func PerfromPostRequest(){
 	fmt.Println(byteLength)
 	fmt.Println(strignBuilder.String())
 
+}
+
+func PerfromPostFormRequest(){
+	const myUrl string = "http://localhost:8000/postform"
+	//form data
+	data := url.Values{}
+	data.Add("firstname", "rupam")
+	data.Add("lastname", "shil")
+	data.Add("email", "rupam@gmail.com")
+
+	res, err := http.PostForm(myUrl, data)
+	checkError(err)
+	defer res.Body.Close()
+	content, err := ioutil.ReadAll(res.Body)
+	stringBuilder := strings.Builder{}
+	contentLength, err := stringBuilder.Write(content)
+	checkError(err)
+	fmt.Println("The content length is ", contentLength)
+	fmt.Println("THe html is")
+	fmt.Println(stringBuilder.String())
 }
 
 func checkError(err error) {
