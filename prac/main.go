@@ -2,46 +2,56 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"strings"
 )
 
-type node struct {
-	value int
-	next *node
-}
-
-type linkedList struct{
-	head *node
-	length int
-}
-
-func (l *linkedList) add(value int){
-	newNode := new(node)
-	newNode.value = value
-
-	if l.head == nil {
-		l.head = newNode
-	} else {
-		iterator:= l.head
-		for ; iterator.next != nil; iterator = iterator.next{
-		}
-		iterator.next = newNode
-	}
-}
-
-func (l linkedList) String() string {
-	sb := strings.Builder{}
-	for iterator := l.head; iterator != nil; iterator= iterator.next{
-		sb.WriteString(fmt.Sprintf("%d ",iterator.value))
-	}
-	return sb.String()
-}
-
 func main() {
+	fmt.Println("Welcome to url requests")
+	// getUrl := "http://localhost:8000/get"
+	// performGetRequest(getUrl)
+	postUrl := "http://localhost:8000/post"
+	performPostRequest(postUrl)
+}
+
+func performGetRequest(url string){
+	res, err := http.Get(url)
+	checkError(err)
+	defer res.Body.Close()
+	fmt.Println("The status of the request is:", res.StatusCode)
+	fmt.Println("The length of the request is:", res.ContentLength)
+	content, err := ioutil.ReadAll(res.Body)
+	checkError(err)
+	value := getString(content)
+	fmt.Println(value)
+}
+
+func performPostRequest(url string){
+	data := strings.NewReader(`
+	{
+		"name": "rupam",
+		"course":"golang"
+	}
+	`)
+	res, err :=http.Post(url, "application/json",data)
+	checkError(err)
+	defer res.Body.Close()
+	content, err := ioutil.ReadAll(res.Body)
+	value := getString(content)
+	fmt.Println(value)
 	
-	fmt.Println("Welcome to linkedlist")
-	l := linkedList{}
-	l.add(5)
-	l.add(90)
-	fmt.Println(l)
+}
+
+func checkError ( err error ){
+	if err != nil {
+		panic(err)
+	}
+}
+
+func getString(content []byte)(string){
+	stringBuilder := strings.Builder{}
+	_, err := stringBuilder.Write(content)
+	checkError(err)
+	return stringBuilder.String()
 }
