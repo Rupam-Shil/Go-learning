@@ -15,7 +15,7 @@ type Course struct {
 
 func main() {
 	fmt.Println("Let's learn about JSON more")
-	EncodeJSON()
+	DecodeJSON()
 }
 
 func EncodeJSON(){
@@ -30,4 +30,56 @@ func EncodeJSON(){
 		panic(err)
 	}
 	fmt.Printf("%s\n",finalJson)
+}
+
+func DecodeJSON(){
+	// uri := "https://api.nuxtjs.dev/mountains"
+	// res, err := http.Get(uri)
+	// PanicError(err)
+	// defer res.Body.Close()
+	// content, err := ioutil.ReadAll(res.Body)
+	// PanicError(err)
+	// stringBuilder := strings.Builder{}
+	// length,err := stringBuilder.Write(content)
+	// fmt.Println(length)
+	// data := stringBuilder.String()
+	// fmt.Printf("%T",data)
+	jsonDataFromWeb := []byte(`
+	{
+		"coursename": "ReactJS Bootcamp",
+		"Price": 299,
+		"website": "LCO",
+		"tags": [
+				"web-dev",
+				"js"
+		]
+    }
+	`)
+
+	var course Course 
+
+	checkValid := json.Valid(jsonDataFromWeb)
+	if checkValid {
+		fmt.Println("JSON was validated")
+		json.Unmarshal(jsonDataFromWeb, &course)
+		fmt.Printf("%#v\n",course)
+	} else {
+		fmt.Println("Json was not valid")
+	}
+
+	// some cases where you want to add data to key value pair
+	var myOnlineData map[string]interface{}
+	json.Unmarshal(jsonDataFromWeb, &myOnlineData)
+	fmt.Printf("%#v\n",myOnlineData)
+
+	for key, value := range myOnlineData {
+		fmt.Printf("key is %v and value is %v\n", key, value)
+	}
+
+}
+
+func PanicError(err error){
+if err != nil{
+		panic(err)
+	}
 }
