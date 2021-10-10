@@ -15,7 +15,7 @@ type Course struct {
 
 func main() {
 	fmt.Println("Let's learn about JSON more")
-	DecodeJSON()
+	EncodeJSON()
 }
 
 func EncodeJSON(){
