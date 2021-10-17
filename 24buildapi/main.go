@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -36,7 +37,22 @@ func (c *Course) IsEmpty() bool {
 
 
 func main() {
-	fmt.Println("Welcome to courses")
+	fmt.Println("API Learning")
+	r := mux.NewRouter()
+	//seeding
+	courses = append(courses,Course{CourseId:"2",CourseName:"React Js",CoursePrice:299,Author:&Author{Fullname:"Rupam SHil",Website:"https://github.com/"}})
+	courses = append(courses,Course{CourseId:"4",CourseName:"Anuglar Js",CoursePrice:199,Author:&Author{Fullname:"SUbhodeep dey ",Website:"https://twitter.com/"}})
+	//routing
+	r.HandleFunc("/",serveHome).Methods("GET")
+	r.HandleFunc("/courses",getAllCourses).Methods("GET")
+	r.HandleFunc("/course/{id}",getOneCourse).Methods("GET")
+	r.HandleFunc("/course",createOneCourse).Methods("POST")
+	r.HandleFunc("/course/{id}",updateOneCourse).Methods("PUT")
+	r.HandleFunc("/course/{id}",deleteOneCOurse).Methods("DELETE")
+
+	// listen to a port
+	log.Fatal(http.ListenAndServe(":4000", r))
+
 }
 
 //controllers - file
@@ -74,12 +90,22 @@ func createOneCourse(w http.ResponseWriter, r *http.Request){
 	//what if: body is empty
 	if r.Body == nil {
 		json.NewEncoder(w).Encode("Please send some data")
+		return
 	}
 	//what about - {}
 	var course Course
 	_ = json.NewDecoder(r.Body).Decode(&course)
 	if course.IsEmpty(){
 		json.NewEncoder(w).Encode("No data inside JSON")
+		return
+	}
+	//check if title is duplicate
+	for _, title := range courses {
+
+		if course.CourseName == title.CourseName {
+			json.NewEncoder(w).Encode("Duplicate course found")
+			return
+		}
 	}
 
 	// generate a unique id, convert into string
@@ -112,19 +138,19 @@ func updateOneCourse(w http.ResponseWriter, r *http.Request){
 	json.NewEncoder(w).Encode("could not find course")
 }
 
-func deleteOneCOurse ( w http.ResponseWriter, r *http.Request){
+func deleteOneCOurse( w http.ResponseWriter, r *http.Request){
 	fmt.Println("Time to delete some courses")
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	if r.Body == nil {
-		json.NewEncoder(w).Encode("Please send some data")
-	}
+	// if r.Body == nil {
+	// 	json.NewEncoder(w).Encode("Please send some data")
+	// }
 
-	var course Course
-	_ = json.NewDecoder(r.Body).Decode(&course)
-	if course.IsEmpty() {
-		json.NewEncoder(w).Encode("THe json data is empty")
-	}
+	// var course Course
+	// _ = json.NewDecoder(r.Body).Decode(&course)
+	// if course.IsEmpty() {
+	// 	json.NewEncoder(w).Encode("THe json data is empty")
+	// }
 
 	for index, course := range courses {
 		if course.CourseId == params["id"]{
